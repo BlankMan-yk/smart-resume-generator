@@ -1,0 +1,676 @@
+// 主题系统样式文件
+// 定义所有主题的CSS变量和样式
+
+// 基础变量
+:root {
+  // 通用变量
+  --transition-base: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: all 0.2s ease;
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  --border-radius-xl: 16px;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
+}
+
+// 液态玻璃主题 (Liquid Glass)
+:root[data-theme="liquid-glass"] {
+  // 应用背景
+  --app-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --header-bg: rgba(255, 255, 255, 0.1);
+  --panel-bg: rgba(255, 255, 255, 0.05);
+  --status-bar-bg: rgba(255, 255, 255, 0.08);
+  
+  // 简历背景
+  --preview-bg: transparent;
+  --resume-bg: rgba(255, 255, 255, 0.1);
+  --resume-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+  --resume-border-radius: 20px;
+  
+  // 个人信息区域
+  --personal-bg: rgba(255, 255, 255, 0.15);
+  --personal-text: rgba(255, 255, 255, 0.95);
+  
+  // 文字颜色
+  --heading-color: rgba(255, 255, 255, 0.9);
+  --subheading-color: rgba(255, 255, 255, 0.7);
+  --text-color: rgba(255, 255, 255, 0.8);
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  --meta-color: rgba(255, 255, 255, 0.5);
+  
+  // 边框和分割线
+  --border-color: rgba(255, 255, 255, 0.2);
+  --accent-color: rgba(255, 255, 255, 0.8);
+  
+  // 标签和徽章
+  --tag-bg: rgba(255, 255, 255, 0.2);
+  --tag-text: rgba(255, 255, 255, 0.9);
+  --honor-bg: rgba(255, 215, 0, 0.2);
+  --honor-text: rgba(255, 215, 0, 0.9);
+  --soft-skill-bg: rgba(147, 51, 234, 0.2);
+  --soft-skill-text: rgba(147, 51, 234, 0.9);
+  --interest-bg: rgba(59, 130, 246, 0.2);
+  --interest-text: rgba(59, 130, 246, 0.9);
+  
+  // 技能条
+  --skill-bar-bg: rgba(255, 255, 255, 0.2);
+  
+  // 按钮
+  --button-bg: rgba(255, 255, 255, 0.1);
+  --button-border: rgba(255, 255, 255, 0.2);
+  --button-text: rgba(255, 255, 255, 0.9);
+  --button-hover-bg: rgba(255, 255, 255, 0.15);
+  --button-hover-border: rgba(255, 255, 255, 0.3);
+  --button-active-bg: rgba(255, 255, 255, 0.2);
+  --button-active-border: rgba(255, 255, 255, 0.4);
+  
+  // 下拉菜单
+  --dropdown-bg: rgba(255, 255, 255, 0.1);
+  --dropdown-border: rgba(255, 255, 255, 0.2);
+  --dropdown-shadow: 0 10px 25px rgba(31, 38, 135, 0.3);
+  
+  // 卡片
+  --card-bg: rgba(255, 255, 255, 0.08);
+  --card-border: rgba(255, 255, 255, 0.15);
+  --card-hover-border: rgba(255, 255, 255, 0.25);
+  --card-hover-shadow: 0 8px 25px rgba(31, 38, 135, 0.2);
+  --card-active-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+  
+  // 编辑器
+  --editor-bg: rgba(30, 30, 30, 0.8);
+  --editor-header-bg: rgba(45, 45, 45, 0.9);
+  --editor-footer-bg: rgba(45, 45, 45, 0.9);
+  --editor-border: rgba(255, 255, 255, 0.1);
+  --editor-text: rgba(255, 255, 255, 0.9);
+  --editor-meta: rgba(255, 255, 255, 0.6);
+  
+  // 状态颜色
+  --primary-color: rgba(255, 255, 255, 0.9);
+  --primary-hover: rgba(255, 255, 255, 1);
+  --secondary-bg: rgba(255, 255, 255, 0.1);
+  --secondary-text: rgba(255, 255, 255, 0.8);
+  --secondary-border: rgba(255, 255, 255, 0.2);
+  --secondary-hover: rgba(255, 255, 255, 0.15);
+  --success-color: #10b981;
+  --error-color: #ef4444;
+  --hover-bg: rgba(255, 255, 255, 0.1);
+  
+  // 错误面板
+  --error-panel-bg: rgba(254, 242, 242, 0.9);
+  --error-border: rgba(254, 202, 202, 0.8);
+  --error-text: #991b1b;
+  
+  // 玻璃效果
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+// 商务主题 (Business)
+:root[data-theme="business"] {
+  // 应用背景
+  --app-bg: #f8f9fa;
+  --header-bg: #ffffff;
+  --panel-bg: #ffffff;
+  --status-bar-bg: #f8f9fa;
+  
+  // 简历背景
+  --preview-bg: #f5f5f5;
+  --resume-bg: #ffffff;
+  --resume-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  --resume-border-radius: 8px;
+  
+  // 个人信息区域
+  --personal-bg: #2c3e50;
+  --personal-text: #ffffff;
+  
+  // 文字颜色
+  --heading-color: #1f2937;
+  --subheading-color: #6b7280;
+  --text-color: #374151;
+  --text-secondary: #6b7280;
+  --meta-color: #9ca3af;
+  
+  // 边框和分割线
+  --border-color: #e5e7eb;
+  --accent-color: #2c3e50;
+  
+  // 标签和徽章
+  --tag-bg: #f3f4f6;
+  --tag-text: #374151;
+  --honor-bg: #fef3c7;
+  --honor-text: #92400e;
+  --soft-skill-bg: #ede9fe;
+  --soft-skill-text: #6d28d9;
+  --interest-bg: #f0f9ff;
+  --interest-text: #0369a1;
+  
+  // 技能条
+  --skill-bar-bg: #e5e7eb;
+  
+  // 按钮
+  --button-bg: #ffffff;
+  --button-border: #d1d5db;
+  --button-text: #374151;
+  --button-hover-bg: #f9fafb;
+  --button-hover-border: #9ca3af;
+  --button-active-bg: #f3f4f6;
+  --button-active-border: #6b7280;
+  
+  // 下拉菜单
+  --dropdown-bg: #ffffff;
+  --dropdown-border: #e5e7eb;
+  --dropdown-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  
+  // 卡片
+  --card-bg: #ffffff;
+  --card-border: #e5e7eb;
+  --card-hover-border: #d1d5db;
+  --card-hover-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --card-active-shadow: 0 0 0 3px rgba(44, 62, 80, 0.1);
+  
+  // 编辑器
+  --editor-bg: #1e1e1e;
+  --editor-header-bg: #2d2d2d;
+  --editor-footer-bg: #2d2d2d;
+  --editor-border: #404040;
+  --editor-text: #ffffff;
+  --editor-meta: #9ca3af;
+  
+  // 状态颜色
+  --primary-color: #3b82f6;
+  --primary-hover: #2563eb;
+  --secondary-bg: #f1f5f9;
+  --secondary-text: #475569;
+  --secondary-border: #cbd5e1;
+  --secondary-hover: #e2e8f0;
+  --success-color: #059669;
+  --error-color: #dc2626;
+  --hover-bg: #f1f5f9;
+  
+  // 错误面板
+  --error-panel-bg: #fef2f2;
+  --error-border: #fecaca;
+  --error-text: #991b1b;
+}
+
+// 创意主题 (Creative)
+:root[data-theme="creative"] {
+  // 应用背景
+  --app-bg: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+  --header-bg: rgba(255, 255, 255, 0.95);
+  --panel-bg: rgba(255, 255, 255, 0.9);
+  --status-bar-bg: rgba(255, 255, 255, 0.95);
+  
+  // 简历背景
+  --preview-bg: transparent;
+  --resume-bg: rgba(255, 255, 255, 0.95);
+  --resume-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  --resume-border-radius: 20px;
+  
+  // 个人信息区域
+  --personal-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --personal-text: #ffffff;
+  
+  // 文字颜色
+  --heading-color: #2d3748;
+  --subheading-color: #4a5568;
+  --text-color: #2d3748;
+  --text-secondary: #718096;
+  --meta-color: #a0aec0;
+  
+  // 边框和分割线
+  --border-color: #e2e8f0;
+  --accent-color: #667eea;
+  
+  // 标签和徽章
+  --tag-bg: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+  --tag-text: #ffffff;
+  --honor-bg: linear-gradient(45deg, #ffd700, #ffed4e);
+  --honor-text: #744210;
+  --soft-skill-bg: linear-gradient(45deg, #a78bfa, #ec4899);
+  --soft-skill-text: #ffffff;
+  --interest-bg: linear-gradient(45deg, #60a5fa, #34d399);
+  --interest-text: #ffffff;
+  
+  // 技能条
+  --skill-bar-bg: #e2e8f0;
+  
+  // 按钮
+  --button-bg: rgba(255, 255, 255, 0.9);
+  --button-border: rgba(102, 126, 234, 0.3);
+  --button-text: #4a5568;
+  --button-hover-bg: rgba(255, 255, 255, 1);
+  --button-hover-border: rgba(102, 126, 234, 0.5);
+  --button-active-bg: rgba(102, 126, 234, 0.1);
+  --button-active-border: rgba(102, 126, 234, 0.7);
+  
+  // 下拉菜单
+  --dropdown-bg: rgba(255, 255, 255, 0.95);
+  --dropdown-border: rgba(102, 126, 234, 0.2);
+  --dropdown-shadow: 0 15px 35px rgba(102, 126, 234, 0.15);
+  
+  // 卡片
+  --card-bg: rgba(255, 255, 255, 0.9);
+  --card-border: rgba(102, 126, 234, 0.2);
+  --card-hover-border: rgba(102, 126, 234, 0.4);
+  --card-hover-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+  --card-active-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+  
+  // 编辑器
+  --editor-bg: #1a202c;
+  --editor-header-bg: #2d3748;
+  --editor-footer-bg: #2d3748;
+  --editor-border: #4a5568;
+  --editor-text: #ffffff;
+  --editor-meta: #a0aec0;
+  
+  // 状态颜色
+  --primary-color: #667eea;
+  --primary-hover: #5a67d8;
+  --secondary-bg: rgba(102, 126, 234, 0.1);
+  --secondary-text: #4a5568;
+  --secondary-border: rgba(102, 126, 234, 0.3);
+  --secondary-hover: rgba(102, 126, 234, 0.15);
+  --success-color: #48bb78;
+  --error-color: #f56565;
+  --hover-bg: rgba(102, 126, 234, 0.1);
+  
+  // 错误面板
+  --error-panel-bg: rgba(254, 242, 242, 0.95);
+  --error-border: rgba(254, 202, 202, 0.8);
+  --error-text: #c53030;
+}
+
+// 极简主题 (Minimal)
+:root[data-theme="minimal"] {
+  // 应用背景
+  --app-bg: #ffffff;
+  --header-bg: #ffffff;
+  --panel-bg: #ffffff;
+  --status-bar-bg: #fafafa;
+  
+  // 简历背景
+  --preview-bg: #fafafa;
+  --resume-bg: #ffffff;
+  --resume-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --resume-border-radius: 0;
+  
+  // 个人信息区域
+  --personal-bg: #000000;
+  --personal-text: #ffffff;
+  
+  // 文字颜色
+  --heading-color: #000000;
+  --subheading-color: #666666;
+  --text-color: #333333;
+  --text-secondary: #666666;
+  --meta-color: #999999;
+  
+  // 边框和分割线
+  --border-color: #e0e0e0;
+  --accent-color: #000000;
+  
+  // 标签和徽章
+  --tag-bg: #f5f5f5;
+  --tag-text: #333333;
+  --honor-bg: #000000;
+  --honor-text: #ffffff;
+  --soft-skill-bg: #f0f0f0;
+  --soft-skill-text: #333333;
+  --interest-bg: #f8f8f8;
+  --interest-text: #333333;
+  
+  // 技能条
+  --skill-bar-bg: #f0f0f0;
+  
+  // 按钮
+  --button-bg: #ffffff;
+  --button-border: #e0e0e0;
+  --button-text: #333333;
+  --button-hover-bg: #f8f8f8;
+  --button-hover-border: #cccccc;
+  --button-active-bg: #f0f0f0;
+  --button-active-border: #999999;
+  
+  // 下拉菜单
+  --dropdown-bg: #ffffff;
+  --dropdown-border: #e0e0e0;
+  --dropdown-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  
+  // 卡片
+  --card-bg: #ffffff;
+  --card-border: #e0e0e0;
+  --card-hover-border: #cccccc;
+  --card-hover-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --card-active-shadow: 0 0 0 2px #000000;
+  
+  // 编辑器
+  --editor-bg: #1e1e1e;
+  --editor-header-bg: #2d2d2d;
+  --editor-footer-bg: #2d2d2d;
+  --editor-border: #404040;
+  --editor-text: #ffffff;
+  --editor-meta: #999999;
+  
+  // 状态颜色
+  --primary-color: #000000;
+  --primary-hover: #333333;
+  --secondary-bg: #f8f8f8;
+  --secondary-text: #333333;
+  --secondary-border: #e0e0e0;
+  --secondary-hover: #f0f0f0;
+  --success-color: #28a745;
+  --error-color: #dc3545;
+  --hover-bg: #f8f8f8;
+  
+  // 错误面板
+  --error-panel-bg: #fff5f5;
+  --error-border: #fed7d7;
+  --error-text: #c53030;
+}
+
+// 科技主题 (Tech)
+:root[data-theme="tech"] {
+  // 应用背景
+  --app-bg: #0f172a;
+  --header-bg: #1e293b;
+  --panel-bg: #1e293b;
+  --status-bar-bg: #0f172a;
+  
+  // 简历背景
+  --preview-bg: #0f172a;
+  --resume-bg: #1e293b;
+  --resume-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+  --resume-border-radius: 8px;
+  
+  // 个人信息区域
+  --personal-bg: linear-gradient(90deg, #00ff88, #00ccff);
+  --personal-text: #0f172a;
+  
+  // 文字颜色
+  --heading-color: #f1f5f9;
+  --subheading-color: #cbd5e1;
+  --text-color: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --meta-color: #64748b;
+  
+  // 边框和分割线
+  --border-color: #334155;
+  --accent-color: #00ff88;
+  
+  // 标签和徽章
+  --tag-bg: #334155;
+  --tag-text: #00ff88;
+  --honor-bg: #fbbf24;
+  --honor-text: #0f172a;
+  --soft-skill-bg: #7c3aed;
+  --soft-skill-text: #f1f5f9;
+  --interest-bg: #0ea5e9;
+  --interest-text: #f1f5f9;
+  
+  // 技能条
+  --skill-bar-bg: #334155;
+  
+  // 按钮
+  --button-bg: #334155;
+  --button-border: #475569;
+  --button-text: #f1f5f9;
+  --button-hover-bg: #475569;
+  --button-hover-border: #64748b;
+  --button-active-bg: #64748b;
+  --button-active-border: #94a3b8;
+  
+  // 下拉菜单
+  --dropdown-bg: #1e293b;
+  --dropdown-border: #334155;
+  --dropdown-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  
+  // 卡片
+  --card-bg: #334155;
+  --card-border: #475569;
+  --card-hover-border: #64748b;
+  --card-hover-shadow: 0 8px 25px rgba(0, 255, 136, 0.1);
+  --card-active-shadow: 0 0 0 3px rgba(0, 255, 136, 0.3);
+  
+  // 编辑器
+  --editor-bg: #0f172a;
+  --editor-header-bg: #1e293b;
+  --editor-footer-bg: #1e293b;
+  --editor-border: #334155;
+  --editor-text: #f1f5f9;
+  --editor-meta: #64748b;
+  
+  // 状态颜色
+  --primary-color: #00ff88;
+  --primary-hover: #00e67a;
+  --secondary-bg: #334155;
+  --secondary-text: #e2e8f0;
+  --secondary-border: #475569;
+  --secondary-hover: #475569;
+  --success-color: #00ff88;
+  --error-color: #ff4444;
+  --hover-bg: #334155;
+  
+  // 错误面板
+  --error-panel-bg: rgba(254, 242, 242, 0.1);
+  --error-border: rgba(254, 202, 202, 0.3);
+  --error-text: #ff6b6b;
+}
+
+// 液态玻璃特效增强
+[data-theme="liquid-glass"] {
+  .resume-container {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.4), 
+        transparent
+      );
+    }
+    
+    &::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(
+        circle at center,
+        rgba(255, 255, 255, 0.05) 0%,
+        transparent 70%
+      );
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+    
+    &:hover::after {
+      opacity: 1;
+    }
+  }
+  
+  .section {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: var(--border-radius-lg);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 1rem;
+    transition: var(--transition-base);
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(31, 38, 135, 0.3);
+    }
+  }
+  
+  .personal-section {
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-radius: var(--border-radius-xl);
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.1) 0%, 
+        rgba(255, 255, 255, 0.05) 100%
+      );
+      pointer-events: none;
+    }
+  }
+}
+
+// 创意主题特效
+[data-theme="creative"] {
+  .resume-container {
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(
+        from 0deg,
+        transparent,
+        rgba(102, 126, 234, 0.1),
+        transparent,
+        rgba(255, 107, 107, 0.1),
+        transparent
+      );
+      animation: rotate 20s linear infinite;
+      pointer-events: none;
+    }
+  }
+  
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .section-title {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+// 科技主题特效
+[data-theme="tech"] {
+  .resume-container {
+    position: relative;
+    border: 1px solid #00ff88;
+    box-shadow: 
+      0 0 20px rgba(0, 255, 136, 0.2),
+      inset 0 0 20px rgba(0, 255, 136, 0.05);
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, 
+        transparent, 
+        #00ff88, 
+        #00ccff,
+        transparent
+      );
+      animation: scan 3s ease-in-out infinite;
+    }
+  }
+  
+  @keyframes scan {
+    0%, 100% {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    50% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  .section-title {
+    color: #00ff88;
+    text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+    font-family: 'Courier New', monospace;
+  }
+  
+  .tech-tag,
+  .skill-name {
+    font-family: 'Courier New', monospace;
+  }
+}
+
+// 响应式调整
+@media (max-width: 768px) {
+  [data-theme="liquid-glass"] {
+    .resume-container {
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    
+    .section {
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+    }
+  }
+}
+
+// 打印样式
+@media print {
+  :root[data-theme] {
+    --app-bg: #ffffff !important;
+    --resume-bg: #ffffff !important;
+    --personal-bg: #2c3e50 !important;
+    --heading-color: #000000 !important;
+    --text-color: #000000 !important;
+    --border-color: #cccccc !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  
+  .resume-container {
+    box-shadow: none !important;
+    border: 1px solid #cccccc !important;
+  }
+  
+  .section {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: none !important;
+  }
+}
+
