@@ -92,7 +92,8 @@
         "项目成果1",
         "项目成果2"
       ],
-      "url": "项目链接"
+      "url": "项目链接",
+      "github": "GitHub链接"
     }
   ],
   "certifications": [
@@ -137,6 +138,7 @@
 ### 3. Projects 字段
 - 使用 `highlights` 而不是 `achievements` 来表示项目成果
 - 必须包含项目的基本信息和技术栈
+- **每个项目对象需包含 `github` 字段（如无可为空字符串）**
 
 ### 4. Certifications 字段
 - 不需要 `id` 字段
