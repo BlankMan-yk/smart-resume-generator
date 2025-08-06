@@ -22,6 +22,10 @@
             <DocumentTextIcon class="icon" />
             导出长图
           </button>
+          <button :disabled="loading" @click="exportPDF" class="btn btn-primary">
+            <DocumentTextIcon class="icon" />
+            导出PDF
+          </button>
         </div>
       </div>
     </header>
@@ -103,8 +107,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { useResumeStore } from '@/stores/resume'
+import { ref, computed, onMounted, nextTick } from 'vue'
+import { useResumeStore } from '@/stores/resume';
 import { useThemeStore } from '@/stores/theme'
 import ResumePreview from '@/components/ResumePreview.vue'
 import JsonEditor from '@/components/JsonEditor.vue'
@@ -122,7 +126,10 @@ import {
   SwatchIcon,
   ClockIcon
 } from '@heroicons/vue/24/outline'
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
+const loading = ref(false);
 const resumeStore = useResumeStore()
 const themeStore = useThemeStore()
 
@@ -201,9 +208,13 @@ const handleFileImport = (event: Event) => {
 
 // 导出长图
 const exportLongImage = async () => {
+  let loadingMessage: HTMLDivElement | null = null;
+  let liquidGlassFix: HTMLStyleElement | null = null;
+  let originalStyle = '';
+  
   try {
     // 显示加载提示
-    const loadingMessage = document.createElement('div')
+    loadingMessage = document.createElement('div');
     loadingMessage.style.cssText = `
       position: fixed;
       top: 50%;
@@ -215,21 +226,21 @@ const exportLongImage = async () => {
       border-radius: 8px;
       z-index: 9999;
       font-size: 16px;
-    `
-    loadingMessage.textContent = '正在生成长图，请稍候...'
-    document.body.appendChild(loadingMessage)
+    `;
+    loadingMessage.textContent = '正在生成长图，请稍候...';
+    document.body.appendChild(loadingMessage);
 
     // 获取预览容器
-    const previewContainer = document.querySelector('.preview-container')
+    const previewContainer = document.querySelector('.preview-container');
     if (!previewContainer) {
-      throw new Error('找不到预览容器')
+      throw new Error('找不到预览容器');
     }
 
     // 保存原始样式
-    let originalStyle = previewContainer.getAttribute('style') || ''
+    originalStyle = (previewContainer as HTMLElement).getAttribute('style') || '';
     
     // 为截图优化样式，保持当前主题
-    previewContainer.style.cssText = `
+    (previewContainer as HTMLElement).style.cssText = `
       width: 800px !important;
       max-width: none !important;
       margin: 0 auto !important;
@@ -237,16 +248,15 @@ const exportLongImage = async () => {
       border-radius: 8px !important;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
       min-height: 100px !important;
-    `
+    `;
 
     // 获取当前主题
-    const currentTheme = document.documentElement.getAttribute('data-theme') || 'liquid-glass'
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'liquid-glass';
     
     // 为液态玻璃主题添加特殊处理
-    let liquidGlassFix: HTMLStyleElement | null = null
     if (currentTheme === 'liquid-glass') {
       // 添加一个临时的样式覆盖，确保液态玻璃效果能正确渲染
-      liquidGlassFix = document.createElement('style')
+      liquidGlassFix = document.createElement('style');
       liquidGlassFix.textContent = `
         .resume-container {
           background: rgba(255, 255, 255, 0.1) !important;
@@ -342,39 +352,39 @@ const exportLongImage = async () => {
           color: rgba(255, 255, 255, 0.9) !important;
           border: 1px solid rgba(255, 255, 255, 0.2) !important;
         }
-      `
-      document.head.appendChild(liquidGlassFix)
+      `;
+      document.head.appendChild(liquidGlassFix);
       
       // 等待样式应用
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      await new Promise(resolve => setTimeout(resolve, 1000));
     } else {
       // 等待样式应用
-      await new Promise(resolve => setTimeout(resolve, 500))
+      await new Promise(resolve => setTimeout(resolve, 500));
     }
 
     // 确保容器有内容且尺寸正确
     if (!previewContainer.innerHTML.trim()) {
-      throw new Error('预览容器为空，请先更新预览')
+      throw new Error('预览容器为空，请先更新预览');
     }
 
     // 强制重新计算布局
-    previewContainer.offsetHeight
+    (previewContainer as HTMLElement).offsetHeight;
 
     // 检查容器尺寸
-    const containerWidth = previewContainer.offsetWidth
-    const containerHeight = previewContainer.scrollHeight
+    const containerWidth = (previewContainer as HTMLElement).offsetWidth;
+    const containerHeight = (previewContainer as HTMLElement).scrollHeight;
 
     if (containerWidth === 0 || containerHeight === 0) {
-      throw new Error('容器尺寸无效，请检查预览内容')
+      throw new Error('容器尺寸无效，请检查预览内容');
     }
 
-    console.log('容器尺寸:', containerWidth, 'x', containerHeight)
+    console.log('容器尺寸:', containerWidth, 'x', containerHeight);
 
     // 动态导入html2canvas
-    const html2canvas = (await import('html2canvas')).default
+    const html2canvas = (await import('html2canvas')).default;
     
     // 截取长图，保持当前主题样式
-    const canvas = await html2canvas(previewContainer, {
+    const canvas = await html2canvas(previewContainer as HTMLElement, {
       scale: 2,
       useCORS: true,
       allowTaint: true,
@@ -387,74 +397,392 @@ const exportLongImage = async () => {
 
       onclone: (clonedDoc) => {
         // 在克隆的文档中确保所有内容可见
-        const clonedContainer = clonedDoc.querySelector('.preview-container')
+        const clonedContainer = clonedDoc.querySelector('.preview-container');
         if (clonedContainer) {
-          clonedContainer.style.width = '800px'
-          clonedContainer.style.height = 'auto'
-          clonedContainer.style.overflow = 'visible'
+          (clonedContainer as HTMLElement).style.width = '800px';
+          (clonedContainer as HTMLElement).style.height = 'auto';
+          (clonedContainer as HTMLElement).style.overflow = 'visible';
         }
-        
-
       }
-    })
+    });
 
     // 检查canvas尺寸
     if (canvas.width === 0 || canvas.height === 0) {
-      throw new Error('Canvas尺寸无效，截图失败')
+      throw new Error('Canvas尺寸无效，截图失败');
     }
 
-    console.log('Canvas尺寸:', canvas.width, 'x', canvas.height)
+    console.log('Canvas尺寸:', canvas.width, 'x', canvas.height);
 
     // 恢复原始样式
-    previewContainer.setAttribute('style', originalStyle)
+    (previewContainer as HTMLElement).setAttribute('style', originalStyle);
 
     // 移除液态玻璃主题的临时样式
     if (liquidGlassFix && liquidGlassFix.parentNode) {
-      document.head.removeChild(liquidGlassFix)
+      document.head.removeChild(liquidGlassFix);
+      liquidGlassFix = null;
     }
 
     // 将canvas转换为图片并下载
     canvas.toBlob((blob) => {
       if (blob) {
-        const url = URL.createObjectURL(blob)
-        const link = document.createElement('a')
-        link.href = url
-        link.download = `resume-${new Date().toISOString().split('T')[0]}.png`
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
-        URL.revokeObjectURL(url)
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `resume-${new Date().toISOString().split('T')[0]}.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
         
         // 清理加载提示
-        document.body.removeChild(loadingMessage)
+        if (loadingMessage && loadingMessage.parentNode) {
+          document.body.removeChild(loadingMessage);
+          loadingMessage = null;
+        }
         
         // 显示成功提示
-        alert('长图导出成功！')
+        alert('长图导出成功！');
       } else {
-        throw new Error('图片生成失败')
+        throw new Error('图片生成失败');
       }
-    }, 'image/png', 0.9)
+    }, 'image/png', 0.9);
     
   } catch (error) {
-    console.error('长图导出失败:', error)
-    alert('长图导出失败，请重试')
+    console.error('长图导出失败:', error);
+    alert('长图导出失败，请重试');
     
     // 恢复原始样式
-    const previewContainer = document.querySelector('.preview-container')
+    const previewContainer = document.querySelector('.preview-container');
     if (previewContainer) {
-      previewContainer.setAttribute('style', originalStyle || '')
+      (previewContainer as HTMLElement).setAttribute('style', originalStyle || '');
     }
     
     // 移除液态玻璃主题的临时样式
     if (liquidGlassFix && liquidGlassFix.parentNode) {
-      document.head.removeChild(liquidGlassFix)
+      document.head.removeChild(liquidGlassFix);
+      liquidGlassFix = null;
     }
     
     // 清理加载提示
-    const loadingMessage = document.querySelector('[style*="position: fixed"]')
-    if (loadingMessage && loadingMessage.textContent?.includes('正在生成长图')) {
-      document.body.removeChild(loadingMessage)
+    if (loadingMessage && loadingMessage.parentNode) {
+      document.body.removeChild(loadingMessage);
+      loadingMessage = null;
     }
+  }
+}
+
+async function exportPDF() {
+  let loadingMessage: HTMLDivElement | null = null;
+  let liquidGlassFix: HTMLStyleElement | null = null;
+  let originalStyle = '';
+  
+  try {
+    loading.value = true;
+    
+    // 显示加载提示
+    loadingMessage = document.createElement('div');
+    loadingMessage.style.cssText = `
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      z-index: 9999;
+      font-size: 16px;
+    `;
+    loadingMessage.textContent = '正在生成PDF，请稍候...';
+    document.body.appendChild(loadingMessage);
+
+    // 获取预览容器
+    const previewContainer = document.querySelector('.preview-container');
+    if (!previewContainer) {
+      throw new Error('找不到预览容器');
+    }
+
+    // 保存原始样式
+    originalStyle = (previewContainer as HTMLElement).getAttribute('style') || '';
+    
+    // 为PDF优化样式
+    (previewContainer as HTMLElement).style.cssText = `
+      width: 800px !important;
+      max-width: none !important;
+      margin: 0 auto !important;
+      padding: 20px !important;
+      border-radius: 8px !important;
+      box-shadow: none !important;
+      background: white !important;
+      min-height: 100px !important;
+      overflow: visible !important;
+    `;
+
+    // 获取当前主题
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'liquid-glass';
+    
+    // 为液态玻璃主题添加特殊处理
+    if (currentTheme === 'liquid-glass') {
+      // 添加一个临时的样式覆盖，确保液态玻璃效果能正确渲染
+      liquidGlassFix = document.createElement('style');
+      liquidGlassFix.textContent = `
+        .resume-container {
+          background: white !important;
+          border: 1px solid #e2e8f0 !important;
+          color: #1e293b !important;
+        }
+        
+        .section {
+          background: #f8fafc !important;
+          border: 1px solid #e2e8f0 !important;
+          color: #1e293b !important;
+        }
+        
+        .personal-section {
+          background: #f1f5f9 !important;
+          color: #1e293b !important;
+        }
+        
+        /* 确保所有文字在PDF中可见 */
+        * {
+          color: #1e293b !important;
+        }
+        
+        .section-title {
+          color: #1e293b !important;
+        }
+        
+        .name {
+          color: #0f172a !important;
+        }
+        
+        .title {
+          color: #475569 !important;
+        }
+        
+        .contact-info {
+          color: #64748b !important;
+        }
+        
+        .position, .degree {
+          color: #1e293b !important;
+        }
+        
+        .company, .institution {
+          color: #475569 !important;
+        }
+        
+        .date {
+          color: #64748b !important;
+        }
+        
+        .description {
+          color: #475569 !important;
+        }
+        
+        .achievements, .highlights {
+          color: #475569 !important;
+        }
+        
+        .achievements li, .highlights li {
+          color: #475569 !important;
+        }
+        
+        .summary {
+          color: #475569 !important;
+        }
+        
+        .tech-tag {
+          background: #e2e8f0 !important;
+          color: #1e293b !important;
+          border: 1px solid #cbd5e1 !important;
+        }
+        
+        .skill-category h4 {
+          color: #1e293b !important;
+        }
+        
+        .skill-item {
+          color: #475569 !important;
+        }
+        
+        .soft-skill-tag {
+          background: #e0e7ff !important;
+          color: #3730a3 !important;
+          border: 1px solid #c7d2fe !important;
+        }
+        
+        .honor-tag {
+          background: #fef3c7 !important;
+          color: #92400e !important;
+          border: 1px solid #fde68a !important;
+        }
+        
+        .language-item, .interest-item {
+          background: #e2e8f0 !important;
+          color: #1e293b !important;
+          border: 1px solid #cbd5e1 !important;
+        }
+      `;
+      document.head.appendChild(liquidGlassFix);
+      
+      // 等待样式应用
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    } else {
+      // 等待样式应用
+      await new Promise(resolve => setTimeout(resolve, 500));
+    }
+
+    // 确保容器有内容且尺寸正确
+    if (!previewContainer.innerHTML.trim()) {
+      throw new Error('预览容器为空，请先更新预览');
+    }
+
+    // 强制重新计算布局
+    (previewContainer as HTMLElement).offsetHeight;
+
+    // 检查容器尺寸
+    const containerWidth = (previewContainer as HTMLElement).offsetWidth;
+    const containerHeight = (previewContainer as HTMLElement).scrollHeight;
+
+    if (containerWidth === 0 || containerHeight === 0) {
+      throw new Error('容器尺寸无效，请检查预览内容');
+    }
+
+    console.log('容器尺寸:', containerWidth, 'x', containerHeight);
+
+    // 动态导入html2canvas和jsPDF
+    const html2canvas = (await import('html2canvas')).default;
+    const { jsPDF } = await import('jspdf');
+    
+    // 截取图片，保持当前主题样式
+    const canvas = await html2canvas(previewContainer as HTMLElement, {
+      scale: 3, // 提高分辨率
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: '#ffffff',
+      width: 800,
+      height: Math.max(containerHeight, 600),
+      scrollX: 0,
+      scrollY: 0,
+      logging: false,
+      
+      onclone: (clonedDoc) => {
+        const clonedContainer = clonedDoc.querySelector('.preview-container');
+        if (clonedContainer) {
+          (clonedContainer as HTMLElement).style.width = '800px';
+          (clonedContainer as HTMLElement).style.height = 'auto';
+          (clonedContainer as HTMLElement).style.overflow = 'visible';
+        }
+      }
+    });
+
+    // 检查canvas尺寸
+    if (canvas.width === 0 || canvas.height === 0) {
+      throw new Error('Canvas尺寸无效，截图失败');
+    }
+
+    console.log('Canvas尺寸:', canvas.width, 'x', canvas.height);
+
+    // 恢复原始样式
+    (previewContainer as HTMLElement).setAttribute('style', originalStyle);
+
+    // 移除液态玻璃主题的临时样式
+    if (liquidGlassFix && liquidGlassFix.parentNode) {
+      document.head.removeChild(liquidGlassFix);
+      liquidGlassFix = null;
+    }
+
+    // 创建PDF
+    const { width: imgWidth, height: imgHeight } = canvas;
+    const pdfWidth = 210; // A4宽度（mm）
+    const pdfHeight = (imgHeight * pdfWidth) / imgWidth;
+    
+    // 创建PDF文档
+    const pdf = new jsPDF({
+      orientation: pdfHeight > 297 ? 'portrait' : 'portrait',
+      unit: 'mm',
+      format: 'a4'
+    });
+
+    // 添加图片到PDF
+    const imgData = canvas.toDataURL('image/png', 1.0);
+    
+    // 如果内容高度超过A4页面，需要分页
+    if (pdfHeight > 297) {
+      const pageHeight = 297;
+      let remainingHeight = pdfHeight;
+      let position = 0;
+      
+      while (remainingHeight > 0) {
+        const currentPageHeight = Math.min(pageHeight, remainingHeight);
+        const sourceY = (position / pdfHeight) * imgHeight;
+        const sourceHeight = (currentPageHeight / pdfHeight) * imgHeight;
+        
+        if (position > 0) {
+          pdf.addPage();
+        }
+        
+        // 创建当前页的canvas
+        const pageCanvas = document.createElement('canvas');
+        pageCanvas.width = canvas.width;
+        pageCanvas.height = sourceHeight;
+        
+        const pageCtx = pageCanvas.getContext('2d');
+        if (pageCtx) {
+          pageCtx.drawImage(
+            canvas,
+            0, sourceY, canvas.width, sourceHeight,
+            0, 0, canvas.width, sourceHeight
+          );
+          
+          const pageImgData = pageCanvas.toDataURL('image/png', 1.0);
+          pdf.addImage(pageImgData, 'PNG', 0, 0, pdfWidth, currentPageHeight);
+        }
+        
+        position += currentPageHeight;
+        remainingHeight -= currentPageHeight;
+      }
+    } else {
+      // 单页PDF
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    }
+
+    // 保存PDF
+    pdf.save(`resume-${new Date().toISOString().split('T')[0]}.pdf`);
+    
+    // 清理加载提示
+    if (loadingMessage && loadingMessage.parentNode) {
+      document.body.removeChild(loadingMessage);
+      loadingMessage = null;
+    }
+    
+    // 显示成功提示
+    alert('PDF导出成功！');
+    
+  } catch (error) {
+    console.error('PDF导出失败:', error);
+    alert('PDF导出失败，请重试');
+    
+    // 恢复原始样式
+    const previewContainer = document.querySelector('.preview-container');
+    if (previewContainer) {
+      (previewContainer as HTMLElement).setAttribute('style', originalStyle || '');
+    }
+    
+    // 移除液态玻璃主题的临时样式
+    if (liquidGlassFix && liquidGlassFix.parentNode) {
+      document.head.removeChild(liquidGlassFix);
+      liquidGlassFix = null;
+    }
+    
+    // 清理加载提示
+    if (loadingMessage && loadingMessage.parentNode) {
+      document.body.removeChild(loadingMessage);
+      loadingMessage = null;
+    }
+  } finally {
+    loading.value = false;
   }
 }
 
